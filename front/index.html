@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Image Upload</title>
+  </head>
+  <body>
+    <h1>Image Upload</h1>
+    <form id="uploadForm" enctype="multipart/form-data">
+      <input type="file" name="image" id="imageInput" accept="image/*" />
+      <button type="button" id="uploadButton">Upload Image</button>
+    </form>
+
+    <script>
+      // Function to handle image upload
+      function uploadImage() {
+        const inputElement = document.getElementById("imageInput");
+        const selectedImage = inputElement.files[0];
+
+        if (!selectedImage) {
+          console.log("Please select an image first.");
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append("image", selectedImage);
+
+        // Send the image to the Flask backend on port 8001 using fetch API
+        fetch("http://localhost:8001/upload", {
+          method: "POST",
+          body: formData,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            // Handle the response from the backend if needed
+            console.log(data);
+          })
+          .catch((error) => {
+            // Handle any errors that occurred during the request
+            console.error("Error:", error);
+          });
+      }
+
+      // Attach the uploadImage function to the button click event
+      document
+        .getElementById("uploadButton")
+        .addEventListener("click", uploadImage);
+    </script>
+  </body>
+</html>
